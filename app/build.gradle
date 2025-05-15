@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.example.hangout_hub'
-    compileSdk 33
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.example.hangout_hub"
         minSdk 24
-        targetSdk 33
+        targetSdk 36
         versionCode 1
         versionName "1.0"
 
@@ -31,6 +31,7 @@ android {
         jvmTarget = '1.8'
     }
 }
+apply plugin: 'com.google.gms.google-services'
 
 dependencies {
 

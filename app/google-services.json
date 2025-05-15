@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "614691230662",
+    "firebase_url": "https://hangout-hub-a1ed8-default-rtdb.firebaseio.com",
+    "project_id": "hangout-hub-a1ed8",
+    "storage_bucket": "hangout-hub-a1ed8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:614691230662:android:e9077eff0411a63728d8c7",
+        "android_client_info": {
+          "package_name": "com.example.hangout_hub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3Ye88TwhGGd30wynuMImtnHux2lWBPQk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
