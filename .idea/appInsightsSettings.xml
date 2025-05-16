@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.hangout_hub" />
+                  <option name="mobileSdkAppId" value="1:614691230662:android:e9077eff0411a63728d8c7" />
+                  <option name="projectId" value="hangout-hub-a1ed8" />
+                  <option name="projectNumber" value="614691230662" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
