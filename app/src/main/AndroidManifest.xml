@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Permission to access the internet -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -23,7 +22,6 @@
         <activity
             android:name=".signin_page"
             android:exported="true">
-            <!-- This makes signin_page the launcher screen -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -36,6 +34,11 @@
 
         <activity
             android:name=".AddHangout"
+            android:exported="false" />
+
+
+        <activity
+            android:name=".View_Activity"
             android:exported="false" />
 
     </application>

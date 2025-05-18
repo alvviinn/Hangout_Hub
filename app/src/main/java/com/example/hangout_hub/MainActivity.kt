@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.AdapterViewFlipper
 import android.widget.Button
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -16,6 +17,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var flipper: AdapterViewFlipper
     private val imageUrls = mutableListOf<String>()
     private val dbRef = FirebaseDatabase.getInstance().getReference("slideshow_images")
+    lateinit var cardmain: CardView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,10 +26,17 @@ class MainActivity : AppCompatActivity() {
 
         btnaddhangout = findViewById(R.id.btn_add_hangout)
         flipper = findViewById(R.id.Adapter_flipper_home)
+        cardmain=findViewById(R.id.cardView3)
 
         btnaddhangout.setOnClickListener {
             val gotoAddhangout = Intent(this, AddHangout::class.java)
             startActivity(gotoAddhangout)
+        }
+
+        cardmain.setOnClickListener{
+            var gotoview =  Intent(this, View_Activity::class.java)
+            startActivity(gotoview)
+
         }
 
         dbRef.addValueEventListener(object : ValueEventListener {
@@ -50,5 +60,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, "Failed to load images", Toast.LENGTH_SHORT).show()
             }
         })
+
+
     }
 }
