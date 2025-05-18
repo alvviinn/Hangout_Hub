@@ -1,4 +1,4 @@
-package com.example.hiddengems
+package com.example.hangout_hub
 
 class Hangout {
 

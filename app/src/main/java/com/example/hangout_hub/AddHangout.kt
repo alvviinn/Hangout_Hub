@@ -1,4 +1,4 @@
-package com.example.hiddengems
+package com.example.hangout_hub
 
 import android.app.ProgressDialog
 import android.content.Intent
@@ -10,7 +10,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.example.hangout_hub.R
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
