@@ -30,39 +30,35 @@ class CustomAdapter(var context: Context, var data:ArrayList<Hangout>):BaseAdapt
         }
     }
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var view:View?
-        var viewHolder:ViewHolder
-        if (convertView == null){
-            var layout = LayoutInflater.from(context)
-            view = layout.inflate(R.layout.myitem,parent,false)
+        val view: View
+        val viewHolder: ViewHolder
+
+        if (convertView == null) {
+            val layout = LayoutInflater.from(context)
+            view = layout.inflate(R.layout.myitem, parent, false)
             viewHolder = ViewHolder(view)
             view.tag = viewHolder
-
-//            val imageReference = storageReference.child(dataSource[position])
-//            imageReference.downloadUrl.addOnSuccessListener { uri ->
-//                Glide.with(context)
-//                    .load(uri)
-//                    .into(imageView)
-//            }.addOnFailureListener { exception ->
-//                // Handle failure
-//            }
-//
-
-
-
-
-        }else{
+        } else {
             view = convertView
             viewHolder = view.tag as ViewHolder
         }
-        var item:Hangout = getItem(position) as Hangout
+
+        val item = getItem(position) as Hangout
         viewHolder.mTxtName.text = item.name
         viewHolder.mTxlocation.text = item.location
         viewHolder.mTxcontacts.text = item.contacts
         viewHolder.mTxdescription.text = item.description
 
-        return view as View
+        // Load image using Glide
+        Glide.with(context)
+            .load(item.image)
+            .placeholder(R.drawable.placeholder) // optional
+            .into(viewHolder.mTximgview)
+
+        return view
     }
+
+
     override fun getItem(position: Int): Any {
         return  data.get(position)
     }

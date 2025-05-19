@@ -1,18 +1,27 @@
 package com.example.hangout_hub
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.ListView
 import android.widget.Toast
-
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.io.IOException
 import java.util.ArrayList
 
 class View_Activity : AppCompatActivity() {
     lateinit var mylistview:ListView
+
+
+    private val PICK_IMAGE_REQUEST = 71
+    private var fileUri: Uri? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,4 +54,7 @@ class View_Activity : AppCompatActivity() {
         mylistview.adapter = myadapter
 
     }
+
+
+
 }

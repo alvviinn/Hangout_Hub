@@ -5,140 +5,124 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import java.util.UUID
+import java.util.*
 
 class AddHangout : AppCompatActivity() {
-    lateinit var addimgview:ImageView
-    lateinit var addtxtview:TextView
-    lateinit var edtaddname:EditText
-    lateinit var edtaddcontacts:EditText
-    lateinit var edtaddlocation:EditText
-    lateinit var edtadddescription:EditText
-    lateinit var btnchooseimage:Button
-    lateinit var btnuploaddata:Button
-    lateinit var btnback2main:Button
+
+    lateinit var addimgview: ImageView
+    lateinit var addtxtview: TextView
+    lateinit var edtaddname: EditText
+    lateinit var edtaddcontacts: EditText
+    lateinit var edtaddlocation: EditText
+    lateinit var edtadddescription: EditText
+    lateinit var btnchooseimage: Button
+    lateinit var btnuploaddata: Button
+    lateinit var btnback2main: ImageButton
+
     var fileUri: Uri? = null
+    lateinit var storageReference: StorageReference
+    lateinit var progressDialog: ProgressDialog
+
+    companion object {
+        const val PICK_IMAGE_REQUEST = 22
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_hangout)
 
+        // Initialize Views
         addimgview = findViewById(R.id.add_imageview)
-        addtxtview= findViewById(R.id.Add_textview)
+        addtxtview = findViewById(R.id.Add_textview)
         edtaddname = findViewById(R.id.edtlocationname)
         edtaddcontacts = findViewById(R.id.edtlocationcontact)
         edtaddlocation = findViewById(R.id.edtlocation)
         edtadddescription = findViewById(R.id.edtlocationdescription)
         btnchooseimage = findViewById(R.id.btnlocationimage)
         btnuploaddata = findViewById(R.id.btnlocationupload)
+        btnback2main = findViewById(R.id.btnimgback)
 
+        // Initialize Firebase Storage
+        storageReference = FirebaseStorage.getInstance().reference
 
+        progressDialog = ProgressDialog(this)
+        progressDialog.setTitle("Uploading...")
+        progressDialog.setMessage("Please wait...")
 
+        // Choose Image
         btnchooseimage.setOnClickListener {
             val intent = Intent()
             intent.type = "image/*"
             intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(
-                Intent.createChooser(intent,"Choose image to upload"),22
-            )
-
-
-
+            startActivityForResult(Intent.createChooser(intent, "Choose image to upload"), PICK_IMAGE_REQUEST)
         }
 
-
-
-
+        // Upload Data
         btnuploaddata.setOnClickListener {
+            uploadDataWithImage()
+        }
 
-            uploadImage()
+        // Go back to main
+        btnback2main.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+        }
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
+            fileUri = data.data
+            addimgview.setImageURI(fileUri)
+        }
+    }
 
-            var name = edtaddname.text.toString().trim()
-            var contacts= edtaddcontacts.text.toString().trim()
-            var location = edtaddlocation.text.toString().trim()
-            var description = edtadddescription.text.toString().trim()
+    private fun uploadDataWithImage() {
+        val name = edtaddname.text.toString().trim()
+        val contacts = edtaddcontacts.text.toString().trim()
+        val location = edtaddlocation.text.toString().trim()
+        val description = edtadddescription.text.toString().trim()
+        val time_id = System.currentTimeMillis().toString()
 
-            var time_id = System.currentTimeMillis().toString()
+        if (name.isEmpty() || contacts.isEmpty() || location.isEmpty() || description.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-            //progress bar
-            var progress = ProgressDialog(this)
-            progress.setTitle("Saving Data")
-            progress.setMessage("Please Wait")
+        if (fileUri == null) {
+            Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-            if (name.isEmpty() or contacts.isEmpty() or location.isEmpty() or description.isEmpty()){
-                Toast.makeText(this, "Cannot Submit Empty Field", Toast.LENGTH_SHORT).show()}
-            else{
+        progressDialog.show()
 
-                var my_child = FirebaseDatabase.getInstance().reference.child("Names/"+time_id)
-                var user_data = Hangout(name,contacts,location,description,time_id)
+        val imageRef = storageReference.child("Names/${UUID.randomUUID()}")
 
-                progress.show()
-                //save data
-                my_child.setValue(user_data).addOnCompleteListener{
+        imageRef.putFile(fileUri!!)
+            .addOnSuccessListener {
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    val imageUrl = uri.toString()
 
-                    if(it.isSuccessful){
-                        Toast.makeText(this, "Hangout uploaded Successfully", Toast.LENGTH_SHORT).show()
+                    val hangout = Hangout(name, contacts, location, description, imageUrl, time_id)
 
-                        var gotoview = Intent(this,View_Activity::class.java)
-                        startActivity(gotoview)
-
-
-                    }else{
-                        Toast.makeText(this, "Failed to Upload Hangout", Toast.LENGTH_SHORT).show()
+                    val dbRef = FirebaseDatabase.getInstance().reference.child("Names/$time_id")
+                    dbRef.setValue(hangout).addOnCompleteListener { task ->
+                        progressDialog.dismiss()
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "Hangout uploaded successfully", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this, View_Activity::class.java))
+                        } else {
+                            Toast.makeText(this, "Failed to upload data", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
-
-
-
-
-
             }
-
-        }
-
-
-
-
-    }
-    // on below line creating a function to upload our image.
-    fun uploadImage() {
-        // on below line checking weather our file uri is null or not.
-        if (fileUri != null) {
-            // on below line displaying a progress dialog when uploading an image.
-            val progressDialog = ProgressDialog(this)
-            // on below line setting title and message for our progress dialog and displaying our progress dialog.
-            progressDialog.setTitle("Uploading...")
-            progressDialog.setMessage("Uploading your image..")
-            progressDialog.show()
-
-            // on below line creating a storage refrence for firebase storage and creating a child in it with
-            // random uuid.
-            val ref: StorageReference = FirebaseStorage.getInstance().getReference()
-                .child(UUID.randomUUID().toString())
-            // on below line adding a file to our storage.
-            ref.putFile(fileUri!!).addOnSuccessListener {
-                // this method is called when file is uploaded.
-                // in this case we are dismissing our progress dialog and displaying a toast message
+            .addOnFailureListener {
                 progressDialog.dismiss()
-                Toast.makeText(applicationContext, "Image Uploaded..", Toast.LENGTH_SHORT).show()
-            }.addOnFailureListener {
-                // this method is called when there is failure in file upload.
-                // in this case we are dismissing the dialog and displaying toast message
-                progressDialog.dismiss()
-                Toast.makeText(applicationContext, "Fail to Upload Image..", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show()
             }
-        }
     }
-
-
 }
