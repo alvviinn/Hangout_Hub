@@ -1,0 +1,76 @@
+<!-- res/layout/activity_restaurant_booking.xml -->
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imgDetailRestaurant"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Restaurant Image" />
+
+        <TextView
+            android:id="@+id/txtDetailName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Restaurant Name"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:id="@+id/txtDetailLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:layout_marginTop="4dp"/>
+
+        <TextView
+            android:id="@+id/txtDetailContact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contact Info"
+            android:layout_marginTop="4dp"/>
+
+        <!-- Booking Form -->
+        <EditText
+            android:id="@+id/edtPeopleCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Number of people"
+            android:inputType="number"
+            android:layout_marginTop="16dp"/>
+
+        <EditText
+            android:id="@+id/edtBookingDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Select date"
+            android:focusable="false"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/edtBookingTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Select time"
+            android:focusable="false"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/btnMakeBooking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm Booking"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+</ScrollView>

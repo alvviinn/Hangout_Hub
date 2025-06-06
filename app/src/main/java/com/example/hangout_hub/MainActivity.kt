@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private val imageUrls = mutableListOf<String>()
     private val dbRef = FirebaseDatabase.getInstance().getReference("slideshow_images")
     lateinit var cardmain: CardView
+    lateinit var cardrestaurants: CardView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         btnaddhangout = findViewById(R.id.btn_add_hangout)
         flipper = findViewById(R.id.Adapter_flipper_home)
         cardmain=findViewById(R.id.cardView3)
+        cardrestaurants=findViewById(R.id.btnRestaurants)
 
         btnaddhangout.setOnClickListener {
             val gotoAddhangout = Intent(this, AddHangout::class.java)
@@ -38,6 +40,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(gotoview)
 
         }
+        cardrestaurants.setOnClickListener{
+            var gotorestaurantview =  Intent(this, VerifiedRestaurantsActivity::class.java)
+            startActivity(gotorestaurantview)
+
+        }
+
 
         dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

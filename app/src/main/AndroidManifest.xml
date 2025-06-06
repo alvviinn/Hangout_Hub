@@ -14,33 +14,36 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hangout_hub"
         tools:targetApi="31">
-
+        <activity
+            android:name=".ManagerBookingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RestaurantBookingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".VerifiedRestaurantsActivity"
+            android:exported="false" />
         <activity
             android:name=".register_page"
             android:exported="false" />
-
         <activity
             android:name=".signin_page"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
         <activity
             android:name=".AddHangout"
             android:exported="false" />
-
-
         <activity
             android:name=".View_Activity"
             android:exported="false" />
-
     </application>
 
 </manifest>
