@@ -1,52 +1,89 @@
 package com.example.hangout_hub
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.AdapterViewFlipper
-import android.widget.Button
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
+import com.google.firebase.database.*
 
 class MainActivity : AppCompatActivity() {
-    lateinit var btnaddhangout: Button
+
+    // Drawer & navigation
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navigationView: NavigationView
+    private lateinit var profileIcon: ImageView
+
+    // Firebase flipper
     private lateinit var flipper: AdapterViewFlipper
     private val imageUrls = mutableListOf<String>()
     private val dbRef = FirebaseDatabase.getInstance().getReference("slideshow_images")
-    lateinit var cardmain: CardView
-    lateinit var cardrestaurants: CardView
 
+    // UI Cards
+    private lateinit var btnAddHangout: Button
+    private lateinit var cardExplore: CardView
+    private lateinit var cardRestaurants: CardView
+    private lateinit var cardProfile: CardView // placeholder if needed
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btnaddhangout = findViewById(R.id.btn_add_hangout)
+        // Drawer initialization
+        drawerLayout = findViewById(R.id.drawer_layout)
+        navigationView = findViewById(R.id.nav_view)
+        profileIcon = findViewById(R.id.profile_icon)
+
+        profileIcon.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+
+        // Navigation item handling
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_home -> showToast("Home clicked")
+
+                R.id.nav_add_restaurant -> {
+                    // Navigate to AddRestaurantActivity
+                    val intent = Intent(this, AddRestaurantActivity::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.nav_logout -> {
+                    showToast("Logging out...")
+                    // Add logout logic here if needed
+                }
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
+
+        // UI components
         flipper = findViewById(R.id.Adapter_flipper_home)
-        cardmain=findViewById(R.id.cardView3)
-        cardrestaurants=findViewById(R.id.btnRestaurants)
+        btnAddHangout = findViewById(R.id.btn_add_hangout)
+        cardExplore = findViewById(R.id.cardView3)
+        cardRestaurants = findViewById(R.id.btnRestaurants)
+        cardProfile = findViewById(R.id.cardView5)
 
-        btnaddhangout.setOnClickListener {
-            val gotoAddhangout = Intent(this, AddHangout::class.java)
-            startActivity(gotoAddhangout)
+        btnAddHangout.setOnClickListener {
+            val intent = Intent(this, AddHangout::class.java)
+            startActivity(intent)
         }
 
-        cardmain.setOnClickListener{
-            var gotoview =  Intent(this, View_Activity::class.java)
-            startActivity(gotoview)
-
-        }
-        cardrestaurants.setOnClickListener{
-            var gotorestaurantview =  Intent(this, VerifiedRestaurantsActivity::class.java)
-            startActivity(gotorestaurantview)
-
+        cardExplore.setOnClickListener {
+            val intent = Intent(this, View_Activity::class.java)
+            startActivity(intent)
         }
 
+        cardRestaurants.setOnClickListener {
+            val intent = Intent(this, VerifiedRestaurantsActivity::class.java)
+            startActivity(intent)
+        }
 
+        // Load images from Firebase into AdapterViewFlipper
         dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 imageUrls.clear()
@@ -57,18 +94,18 @@ class MainActivity : AppCompatActivity() {
 
                 val adapter = ImageFlipperAdapter(this@MainActivity, imageUrls)
                 flipper.adapter = adapter
-
-                // No animations used
                 flipper.flipInterval = 3000
                 flipper.isAutoStart = true
                 flipper.startFlipping()
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MainActivity, "Failed to load images", Toast.LENGTH_SHORT).show()
+                showToast("Failed to load images")
             }
         })
+    }
 
-
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

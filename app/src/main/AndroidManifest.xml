@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Hangout_hub"
         tools:targetApi="31">
         <activity
+            android:name=".AddRestaurantActivity"
+            android:exported="false" />
+        <activity
             android:name=".ManagerBookingsActivity"
             android:exported="false" />
         <activity
